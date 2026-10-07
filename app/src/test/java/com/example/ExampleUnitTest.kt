@@ -38,6 +38,20 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun testVoiceProfilesAcousticsPresent() {
+        for (celeb in CelebrityCatalog.celebrities) {
+            val profile = celeb.voiceProfile
+            assertNotNull(profile)
+            assertTrue(profile.timbre.isNotBlank())
+            assertTrue(profile.pitchLabel.isNotBlank())
+            assertTrue(profile.cadenceSpeedLabel.isNotBlank())
+            assertTrue(profile.resonance.isNotBlank())
+            assertTrue(profile.mannerisms.isNotEmpty())
+            assertTrue(profile.samplePreviewPhrase.isNotBlank())
+        }
+    }
+
+    @Test
     fun testScriptPersonaGenerator() {
         val ik = CelebrityCatalog.getById("imran_khan")
         val ikSpeech = ScriptPersonaGenerator.stylizeText("Petrol mehenga hai", ik)

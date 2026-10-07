@@ -5,6 +5,15 @@ enum class CelebrityCategory {
     BOLLYWOOD
 }
 
+data class VoiceProfile(
+    val timbre: String,
+    val pitchLabel: String,
+    val cadenceSpeedLabel: String,
+    val resonance: String,
+    val mannerisms: List<String>,
+    val samplePreviewPhrase: String
+)
+
 data class SignaturePhrase(
     val title: String,
     val romanUrdu: String,
@@ -26,6 +35,7 @@ data class Celebrity(
     val avatarEmoji: String,
     val tagLine: String,
     val description: String,
+    val voiceProfile: VoiceProfile,
     val defaultEmotion: EmotionType,
     val signaturePhrases: List<SignaturePhrase>
 )
@@ -46,6 +56,14 @@ object CelebrityCatalog {
             avatarEmoji = "🏏",
             tagLine = "Ghabrana Nahi Hai! Absolute Not!",
             description = "Passionate, fiery rally speeches with dramatic pauses, resolute tone, and charismatic appeal.",
+            voiceProfile = VoiceProfile(
+                timbre = "Fiery Rally Baritone",
+                pitchLabel = "Mid-Low (-1 semitone)",
+                cadenceSpeedLabel = "Dynamic 1.05x",
+                resonance = "Stadium Jalsa Reverb",
+                mannerisms = listOf("Dramatic suspense pauses", "Passionate finger pointing", "Direct rhetorical questions"),
+                samplePreviewPhrase = "Aap ne sab se pehle ghabrana bilkul nahi hai! Absolutely Not!"
+            ),
             defaultEmotion = EmotionType.RALLY_FIERCE,
             signaturePhrases = listOf(
                 SignaturePhrase(
@@ -94,6 +112,14 @@ object CelebrityCatalog {
             avatarEmoji = "🦁",
             tagLine = "Vote Ko Izzat Do! Sher Aaya!",
             description = "High-pitched, sharp, fiery cadenced orator with fearless defiance and energetic political slogans.",
+            voiceProfile = VoiceProfile(
+                timbre = "Sharp Staccato Orator",
+                pitchLabel = "High Treble (+4 semitones)",
+                cadenceSpeedLabel = "Punchy 1.08x",
+                resonance = "Megaphone Loudspeaker PA",
+                mannerisms = listOf("Defiant high pitch spikes", "Crowd chorus slogans", "Rhythmic clapping cadence"),
+                samplePreviewPhrase = "Mian de naare vajjan ge! Vote ko izzat do, sher aaya maidan vich!"
+            ),
             defaultEmotion = EmotionType.RALLY_FIERCE,
             signaturePhrases = listOf(
                 SignaturePhrase(
@@ -136,32 +162,22 @@ object CelebrityCatalog {
             avatarEmoji = "⚡",
             tagLine = "Punjab Speed! Kashkol Tod Denge!",
             description = "Rapid-fire speed, energetic dramatic urgency, poetic Urdu recitations, and vigorous speech cadence.",
+            voiceProfile = VoiceProfile(
+                timbre = "Rapid High-Speed Cadence",
+                pitchLabel = "Urgent Mid (+1 semitone)",
+                cadenceSpeedLabel = "Lightning 1.32x Speed",
+                resonance = "Urgent Podium Microphone",
+                mannerisms = listOf("Dramatic mic-shaking hand waving", "Urgent breath intakes", "Passionate Habib Jalib poetry recitations"),
+                samplePreviewPhrase = "Khadim-e-Aala speed se kaam hoga! Yeh kashkol hum tod kar phenk denge!"
+            ),
             defaultEmotion = EmotionType.RALLY_FIERCE,
             signaturePhrases = listOf(
-                Celebrity(
-                    id = "shehbaz_sharif",
-                    name = "Shehbaz Sharif",
-                    urduName = "",
-                    title = "",
-                    category = CelebrityCategory.POLITICAL,
-                    basePitch = 1f,
-                    baseSpeed = 1f,
-                    pitchShiftSemitones = 0,
-                    accentColorHex = 0,
-                    secondaryColorHex = 0,
-                    avatarEmoji = "",
-                    tagLine = "",
-                    description = "",
-                    defaultEmotion = EmotionType.RALLY_FIERCE,
-                    signaturePhrases = emptyList()
-                ).run {
-                    SignaturePhrase(
-                        title = "Khadim-e-Aala Speed",
-                        romanUrdu = "Khadim-e-Aala speed se kaam hoga! Din raat aik kar denge, aadhi aadhi raat ko inspection karenge!",
-                        translation = "Work will proceed at Khadim-e-Aala speed! We will work day and night!",
-                        emotion = EmotionType.RALLY_FIERCE
-                    )
-                },
+                SignaturePhrase(
+                    title = "Khadim-e-Aala Speed",
+                    romanUrdu = "Khadim-e-Aala speed se kaam hoga! Din raat aik kar denge, aadhi aadhi raat ko inspection karenge!",
+                    translation = "Work will proceed at Khadim-e-Aala speed! We will work day and night!",
+                    emotion = EmotionType.RALLY_FIERCE
+                ),
                 SignaturePhrase(
                     title = "Kashkol Tod Denge",
                     romanUrdu = "Yeh kashkol hum tod kar phenk denge! Bheekh nahi mangenge, qurbani denge!",
@@ -196,6 +212,14 @@ object CelebrityCatalog {
             avatarEmoji = "👑",
             tagLine = "Mujhe Kyun Nikala? Sher Aik Wari Fer!",
             description = "Deep baritone, slow deliberate pauses, solemn cadence, authoritative statesman style.",
+            voiceProfile = VoiceProfile(
+                timbre = "Solemn Dignified Bass",
+                pitchLabel = "Deep Heavy Bass (-4 semitones)",
+                cadenceSpeedLabel = "Deliberate 0.82x",
+                resonance = "Chamber Statesman Acoustics",
+                mannerisms = listOf("Prolonged reflective pauses", "Grave deep tone", "Repetitive emotional inquiries"),
+                samplePreviewPhrase = "Mujhe kyun nikala? Mera jurm kya tha? Main awam ki adalat mein ja raha hoon."
+            ),
             defaultEmotion = EmotionType.PRESS_CONFERENCE,
             signaturePhrases = listOf(
                 SignaturePhrase(
@@ -238,6 +262,14 @@ object CelebrityCatalog {
             avatarEmoji = "✨",
             tagLine = "Bade Bade Deshon Mein... K..K..Kiran!",
             description = "Expressive vocal fry, dramatic romantic stammer, heartfelt sighs, charismatic cinematic intensity.",
+            voiceProfile = VoiceProfile(
+                timbre = "Romantic Breathy Vocal Fry",
+                pitchLabel = "Expressive Mid (0 semitone)",
+                cadenceSpeedLabel = "Cinematic 0.96x",
+                resonance = "Bollywood Film Reverb & Strings",
+                mannerisms = listOf("Iconic heartfelt sigh", "Romantic dramatic stammer (K..k..kiran)", "Deep dimpled smile inflections"),
+                samplePreviewPhrase = "Bade bade deshon mein aisi chhoti chhoti baatein hoti rehti hain, Senorita!"
+            ),
             defaultEmotion = EmotionType.ROMANTIC_HUSKY,
             signaturePhrases = listOf(
                 SignaturePhrase(
@@ -286,6 +318,14 @@ object CelebrityCatalog {
             avatarEmoji = "🕶️",
             tagLine = "Ek Baar Jo Maine Commitment Kar Di!",
             description = "Deep chest swagger, nonchalant swagger, bass-heavy nonchalance, iconic punchy one-liners.",
+            voiceProfile = VoiceProfile(
+                timbre = "Chest Bass Macho Swagger",
+                pitchLabel = "Subwoofer Bass (-3 semitones)",
+                cadenceSpeedLabel = "Nonchalant 0.92x",
+                resonance = "Booming Sub-Bass Theater",
+                mannerisms = listOf("Casual slow drawl", "Confident chuckles", "Unapologetic swagger punchlines"),
+                samplePreviewPhrase = "Ek baar jo maine commitment kar di, uske baad toh main apne aap ki bhi nahi sunta!"
+            ),
             defaultEmotion = EmotionType.MACHO_SWAGGER,
             signaturePhrases = listOf(
                 SignaturePhrase(
@@ -328,6 +368,14 @@ object CelebrityCatalog {
             avatarEmoji = "🔥",
             tagLine = "Aata Maajhi Satakli! Singham!",
             description = "Intense, grave gravel-baritone, smoldering cinematic punchlines, steely cold glare in audio form.",
+            voiceProfile = VoiceProfile(
+                timbre = "Gravel Bass Smolder",
+                pitchLabel = "Ultra Deep (-5 semitones)",
+                cadenceSpeedLabel = "Cold & Slow 0.84x",
+                resonance = "Action Cinematic Impact",
+                mannerisms = listOf("Steely slow pacing", "Gravelly throat vocal vibration", "Sudden roaring crescendo"),
+                samplePreviewPhrase = "Aata maajhi satakli! Jismein hai dum, toh fakhat Bajirao Singham!"
+            ),
             defaultEmotion = EmotionType.MACHO_SWAGGER,
             signaturePhrases = listOf(
                 SignaturePhrase(

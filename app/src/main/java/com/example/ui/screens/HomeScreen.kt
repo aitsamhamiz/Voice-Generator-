@@ -69,6 +69,7 @@ import com.example.ui.components.CelebrityItemCard
 import com.example.ui.components.EffectSelectorGrid
 import com.example.ui.components.EmotionSelector
 import com.example.ui.components.PitchSpeedSliders
+import com.example.ui.components.VoiceProfileSelector
 import com.example.ui.components.WaveformVisualizer
 import com.example.ui.theme.NeonAmber
 import com.example.ui.theme.NeonCyan
@@ -103,7 +104,9 @@ fun HomeScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val playbackAmp by viewModel.playbackAmplitude.collectAsState()
     val currentPcm by viewModel.currentPcmBuffer.collectAsState()
+    val previewPlayingCelebId by viewModel.previewPlayingCelebrityId.collectAsState()
 
+    var showVoiceProfilesList by remember { mutableStateOf(false) }
     var showSaveDialog by remember { mutableStateOf(false) }
     var saveTitleInput by remember { mutableStateOf("") }
 
@@ -255,26 +258,66 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Public Figures Section
+        // Public Figures & Voice Profiles Section
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Select Persona",
-                    color = TextPrimary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Column {
+                    Text(
+                        text = if (showVoiceProfilesList) "Voice Profiles & Specs" else "Select Persona",
+                        color = TextPrimary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = if (showVoiceProfilesList) "7 acoustic profiles with live audition" else "Tap to switch speaker voice",
+                        color = TextSecondary,
+                        fontSize = 11.sp
+                    )
+                }
 
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (showVoiceProfilesList) NeonCyan.copy(alpha = 0.2f) else StudioSurfaceVariant,
+                    border = BorderStroke(1.dp, if (showVoiceProfilesList) NeonCyan else Color(0xFF2C2C40)),
+                    modifier = Modifier
+                        .clickable { showVoiceProfilesList = !showVoiceProfilesList }
+                        .testTag("toggle_voice_profiles_view")
+                ) {
+                    Text(
+                        text = if (showVoiceProfilesList) "Show Carousel" else "Voice Profiles 🎚️",
+                        color = if (showVoiceProfilesList) NeonCyan else TextPrimary,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (showVoiceProfilesList) {
+                // Detailed Voice Profile Selector Component
+                VoiceProfileSelector(
+                    selectedCelebrity = selectedCeleb,
+                    onCelebritySelected = { viewModel.selectCelebrity(it) },
+                    onPreviewVoice = { viewModel.previewVoice(it) },
+                    isPlayingPreview = isPlaying,
+                    playingCelebrityId = previewPlayingCelebId
+                )
+            } else {
                 // Category Filter Chips
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
                     FilterChip(
                         selected = categoryFilter == null,
                         onClick = { viewModel.setCategoryFilter(null) },
-                        label = { Text("All", fontSize = 11.sp) },
+                        label = { Text("All (7)", fontSize = 11.sp) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = NeonCyan.copy(alpha = 0.2f),
                             selectedLabelColor = NeonCyan
@@ -284,7 +327,7 @@ fun HomeScreen(
                     FilterChip(
                         selected = categoryFilter == CelebrityCategory.POLITICAL,
                         onClick = { viewModel.setCategoryFilter(CelebrityCategory.POLITICAL) },
-                        label = { Text("Political", fontSize = 11.sp) },
+                        label = { Text("🏛️ Political (4)", fontSize = 11.sp) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFF1B5E20).copy(alpha = 0.4f),
                             selectedLabelColor = Color(0xFF81C784)
@@ -294,7 +337,7 @@ fun HomeScreen(
                     FilterChip(
                         selected = categoryFilter == CelebrityCategory.BOLLYWOOD,
                         onClick = { viewModel.setCategoryFilter(CelebrityCategory.BOLLYWOOD) },
-                        label = { Text("Bollywood", fontSize = 11.sp) },
+                        label = { Text("🎬 Bollywood (3)", fontSize = 11.sp) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFF880E4F).copy(alpha = 0.4f),
                             selectedLabelColor = Color(0xFFFF80AB)
@@ -302,21 +345,21 @@ fun HomeScreen(
                         modifier = Modifier.testTag("filter_bollywood")
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-            // Carousel of Celebrities
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(horizontal = 2.dp)
-            ) {
-                items(filteredCelebs) { celeb ->
-                    CelebrityItemCard(
-                        celebrity = celeb,
-                        isSelected = celeb.id == selectedCeleb.id,
-                        onClick = { viewModel.selectCelebrity(celeb) }
-                    )
+                // Carousel of Celebrities
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(horizontal = 2.dp)
+                ) {
+                    items(filteredCelebs) { celeb ->
+                        CelebrityItemCard(
+                            celebrity = celeb,
+                            isSelected = celeb.id == selectedCeleb.id,
+                            onClick = { viewModel.selectCelebrity(celeb) }
+                        )
+                    }
                 }
             }
         }

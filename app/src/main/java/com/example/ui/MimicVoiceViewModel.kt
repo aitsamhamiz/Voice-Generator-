@@ -72,6 +72,9 @@ class MimicVoiceViewModel(application: Application) : AndroidViewModel(applicati
     private val _statusMessage = MutableStateFlow("Ready to mimic celebrity voices")
     val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
 
+    private val _previewPlayingCelebrityId = MutableStateFlow<String?>(null)
+    val previewPlayingCelebrityId: StateFlow<String?> = _previewPlayingCelebrityId.asStateFlow()
+
     // Exposed Flows from Subsystems
     val isTtsReady: StateFlow<Boolean> = ttsEngine.isTtsReady
     val isProcessing: StateFlow<Boolean> = ttsEngine.isProcessing
@@ -145,6 +148,20 @@ class MimicVoiceViewModel(application: Application) : AndroidViewModel(applicati
         _inputText.value = phrase.romanUrdu
         _selectedEmotion.value = phrase.emotion
         _selectedEffect.value = phrase.emotion.recommendedEffect
+        synthesizeAndPlay()
+    }
+
+    fun previewVoice(celebrity: Celebrity) {
+        if (isPlaying.value && _previewPlayingCelebrityId.value == celebrity.id) {
+            stopAudio()
+            _previewPlayingCelebrityId.value = null
+            return
+        }
+
+        stopAudio()
+        selectCelebrity(celebrity)
+        _previewPlayingCelebrityId.value = celebrity.id
+        _inputText.value = celebrity.voiceProfile.samplePreviewPhrase
         synthesizeAndPlay()
     }
 
