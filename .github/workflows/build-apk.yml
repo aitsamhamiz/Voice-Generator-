@@ -18,7 +18,7 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Auto Setup Correct google-services.json
+    - name: Setup google-services.json
       run: |
         mkdir -p app
         echo '{
@@ -41,13 +41,16 @@ jobs:
           "configuration_version": "1"
         }' > app/google-services.json
 
-    - name: Build APK with Gradle Wrapper
+    - name: Build APK
       run: |
+        # Agar gradlew mojood nahi hai toh wrapper generate karein
         if [ ! -f "./gradlew" ]; then
           gradle wrapper
         fi
         chmod +x gradlew
-        ./gradlew assembleDebug
+        
+        # Debug keystore ka masla hal karne ke liye clean aur assembleDebug chalayein
+        ./gradlew clean assembleDebug --stacktrace
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
