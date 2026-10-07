@@ -68,6 +68,7 @@ import com.example.ui.MimicVoiceViewModel
 import com.example.ui.components.CelebrityItemCard
 import com.example.ui.components.EffectSelectorGrid
 import com.example.ui.components.EmotionSelector
+import com.example.ui.components.MimicSpeechTextField
 import com.example.ui.components.PitchSpeedSliders
 import com.example.ui.components.VoiceProfileSelector
 import com.example.ui.components.WaveformVisualizer
@@ -502,65 +503,26 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Custom Speech Input Box
+        // Dedicated Speech Text Field Component
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Text to Mimic",
-                    color = TextPrimary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Row {
-                    IconButton(
-                        onClick = {
-                            val randomPhrase = selectedCeleb.signaturePhrases.randomOrNull()
-                            if (randomPhrase != null) {
-                                viewModel.updateInputText(randomPhrase.romanUrdu)
-                            }
-                        },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Pick Random Quote",
-                            tint = NeonCyan,
-                            modifier = Modifier.size(18.dp)
-                        )
+            MimicSpeechTextField(
+                text = inputText,
+                onTextChanged = { viewModel.updateInputText(it) },
+                selectedCelebrity = selectedCeleb,
+                onSpeakClick = {
+                    if (isPlaying) viewModel.stopAudio()
+                    else viewModel.synthesizeAndPlay()
+                },
+                isPlaying = isPlaying,
+                isProcessing = isProcessing,
+                onRandomPhraseClick = {
+                    val randomPhrase = selectedCeleb.signaturePhrases.randomOrNull()
+                    if (randomPhrase != null) {
+                        viewModel.updateInputText(randomPhrase.romanUrdu)
                     }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            OutlinedTextField(
-                value = inputText,
-                onValueChange = { viewModel.updateInputText(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("input_speech_text"),
-                shape = RoundedCornerShape(14.dp),
-                minLines = 3,
-                maxLines = 6,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = NeonCyan,
-                    unfocusedBorderColor = Color(0xFF2C2C40),
-                    focusedContainerColor = StudioSurfaceCard,
-                    unfocusedContainerColor = StudioSurfaceCard,
-                    focusedTextColor = TextPrimary,
-                    unfocusedTextColor = TextPrimary
-                ),
-                placeholder = {
-                    Text(
-                        text = "Enter text in Urdu, Hindi, or English to mimic in ${selectedCeleb.name}'s voice...",
-                        color = TextTertiary,
-                        fontSize = 13.sp
-                    )
+                },
+                onStylizeClick = {
+                    viewModel.generateParodyScript(inputText)
                 }
             )
         }
