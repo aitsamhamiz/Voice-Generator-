@@ -1,0 +1,6 @@
+{
+  "name": "MimicVoice",
+  "description": "Sound mimicry from text for political figures and Bollywood legends (Imran Khan, Maryam Nawaz, Shahbaz Sharif, Nawaz Sharif, Shah Rukh Khan, Salman Khan, Ajay Devgn) with voice changer and audio effects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
